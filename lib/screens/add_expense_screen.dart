@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../models/expense_model.dart';
 
 class AddExpenseScreen extends StatefulWidget {
   const AddExpenseScreen({super.key});
@@ -36,9 +37,19 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
       final title = _titleController.text;
       final amount = double.parse(_amountController.text);
 
-      print("Title $title");
-      print("Amount $amount");
-      print("Date $_selectedDate");
+      // print("Title $title");
+      // print("Amount $amount");
+      // print("Date $_selectedDate");
+
+      // final newExpense = {
+      //   "title": title,
+      //   "date": _selectedDate,
+      //   "amount": amount,
+      // };
+
+      final newExpense = ExpenseModel(title: title, date: _selectedDate, amount: amount);
+
+      Navigator.pop(context, newExpense);
     }
   }
 
