@@ -26,6 +26,37 @@ class _HomeScreenState extends State<HomeScreen> {
       expenses.fold(0.0, (sum, item) => sum + item.amount);
   double get balance => totalBudget - totalExpense;
 
+  confirmDelete(int index) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Delete Expense"),
+        content: Text("Are you sure want to delete?"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text("Cancel"),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final expenseBox = Hive.box<ExpenseModel>("expenses");
+              await expenseBox.deleteAt(index);
+              Navigator.pop(context);
+              setState(() {});
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            child: Text("Delete"),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,6 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   title: expense.title,
                   date: expense.date,
                   amount: expense.amount,
+                  onDelete: () => confirmDelete(index),
                 );
               },
             ),
@@ -104,17 +136,19 @@ class ExpenseCard extends StatelessWidget {
   final String title;
   final DateTime? date;
   final double amount;
-
-  String get formatedDate {
-    return date == null ? "No Date" : DateFormat("MMM d, y").format(date!);
-  }
+  final VoidCallback onDelete;
 
   const ExpenseCard({
     required this.title,
     required this.date,
     required this.amount,
+    required this.onDelete,
     super.key,
   });
+
+  String get formatedDate {
+    return date == null ? "No Date" : DateFormat("MMM d, y").format(date!);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -150,6 +184,13 @@ class ExpenseCard extends StatelessWidget {
               child: Text(
                 "\$${amount.toStringAsFixed(2)}",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ),
+            Container(
+              padding: EdgeInsetsDirectional.only(start: 30),
+              child: IconButton(
+                onPressed: () => onDelete,
+                icon: Icon(Icons.delete, color: Colors.red),
               ),
             ),
           ],
