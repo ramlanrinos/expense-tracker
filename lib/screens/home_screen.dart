@@ -15,6 +15,9 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   final double totalBudget = 5000;
+  // fold() is a method available on all Dart lists.
+  // It is used to combine (or reduce) all elements of a list into a single value.
+  // list.fold(initialValue, (previousValue, element) => newValue)
   double get totalExpense =>
       expenses.fold(0.0, (sum, item) => sum + item.amount);
   double get balance => totalBudget - totalExpense;
