@@ -11,8 +11,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<ExpenseModel> expenses = [
-    ExpenseModel(title: "Rinos", date: DateTime.now(), amount: 250.0),
+    ExpenseModel(title: "Food", date: DateTime.now(), amount: 250.0),
   ];
+
+  final double totalBudget = 5000;
+  double get totalExpense =>
+      expenses.fold(0.0, (sum, item) => sum + item.amount);
+  double get balance => totalBudget - totalExpense;
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +45,31 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Total Expenses"),
+                Text.rich(
+                  TextSpan(
+                    text: "Total Expenses: ",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    children: [
+                      TextSpan(
+                        text: "\$${totalExpense.toStringAsFixed(2)}",
+                        style: TextStyle(fontSize: 16, color: Colors.redAccent),
+                      ),
+                    ],
+                  ),
+                ),
                 SizedBox(height: 10),
-                Text("Balance"),
+                Text.rich(
+                  TextSpan(
+                    text: "Balance: ",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    children: [
+                      TextSpan(
+                        text: "\$${balance.toStringAsFixed(2)}",
+                        style: TextStyle(fontSize: 16, color: Colors.green),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
