@@ -32,16 +32,34 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Icon(Icons.add),
       ),
       appBar: AppBar(title: Text("Expense Tracker")),
-      body: ListView.builder(
-        itemCount: expenses.length,
-        itemBuilder: (context, index) {
-          final expense = expenses[index];
-          return ExpenseCard(
-            title: expense.title,
-            date: expense.date,
-            amount: expense.amount,
-          );
-        },
+      body: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Total Expenses"),
+                SizedBox(height: 10),
+                Text("Balance"),
+              ],
+            ),
+          ),
+          Flexible(
+            child: ListView.builder(
+              itemCount: expenses.length,
+              itemBuilder: (context, index) {
+                final expense = expenses[index];
+                return ExpenseCard(
+                  title: expense.title,
+                  date: expense.date,
+                  amount: expense.amount,
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
