@@ -1,21 +1,47 @@
+import 'package:expense_tracker/models/expense_model.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  List<ExpenseModel> expenses = [
+    ExpenseModel(title: "Rinos", date: DateTime.now(), amount: 250.0),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final newExpense =
+              await Navigator.pushNamed(context, "/add-expense")
+                  as ExpenseModel;
+          setState(() {
+            expenses.add(newExpense);
+          });
+          // print("New Expense $newExpense");
+        },
+        backgroundColor: Colors.indigoAccent,
+        foregroundColor: Colors.white,
+        child: Icon(Icons.add),
+      ),
       appBar: AppBar(title: Text("Expense Tracker")),
-      body: Column(
-        children: [
-          ExpenseCard(title: "Groceries", date: "Sep 15, 2020", price: 250.0),
-          ExpenseCard(
-            title: "Electricity Bill",
-            date: "Aug 11, 2024",
-            price: 1200.0,
-          ),
-        ],
+      body: ListView.builder(
+        itemCount: expenses.length,
+        itemBuilder: (context, index) {
+          final expense = expenses[index];
+          return ExpenseCard(
+            title: expense.title,
+            date: expense.date,
+            amount: expense.amount,
+          );
+        },
       ),
     );
   }
@@ -23,13 +49,17 @@ class HomeScreen extends StatelessWidget {
 
 class ExpenseCard extends StatelessWidget {
   final String title;
-  final String date;
-  final double price;
+  final DateTime? date;
+  final double amount;
+
+  String get formatedDate {
+    return date == null ? "No Date" : DateFormat("MMM d, y").format(date!);
+  }
 
   const ExpenseCard({
     required this.title,
     required this.date,
-    required this.price,
+    required this.amount,
     super.key,
   });
 
@@ -53,7 +83,7 @@ class ExpenseCard extends StatelessWidget {
                 ),
                 // SizedBox(height: 5),
                 Text(
-                  date,
+                  formatedDate,
                   style: TextStyle(fontSize: 16, color: Colors.blueGrey),
                 ),
               ],
@@ -65,7 +95,7 @@ class ExpenseCard extends StatelessWidget {
               ),
               padding: EdgeInsets.all(8.0),
               child: Text(
-                "\$${price.toStringAsFixed(2)}",
+                "\$${amount.toStringAsFixed(2)}",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
