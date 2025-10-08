@@ -1,8 +1,15 @@
+import 'package:expense_tracker/models/expense_model.dart';
 import 'package:flutter/material.dart';
 import 'screens/add_expense_screen.dart';
 import 'screens/home_screen.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final appDocDir = await getApplicationDocumentsDirectory();
+  Hive.init(appDocDir.path);
+  await Hive.openBox<ExpenseModel>("expenses");
   runApp(const ExpenseApp());
 }
 
