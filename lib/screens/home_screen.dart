@@ -1,6 +1,7 @@
 import 'package:expense_tracker/models/expense_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:hive/hive.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,9 +11,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<ExpenseModel> expenses = [
-    ExpenseModel(title: "Food", date: DateTime.now(), amount: 250.0),
-  ];
+  // List<ExpenseModel> expenses = [
+  //   ExpenseModel(title: "Food", date: DateTime.now(), amount: 250.0),
+  // ];
+
+  final expenseBox = Hive.box<ExpenseModel>("expenses");
+  List<ExpenseModel> get expenses => expenseBox.values.toList();
 
   final double totalBudget = 5000;
   // fold() is a method available on all Dart lists.
@@ -31,7 +35,8 @@ class _HomeScreenState extends State<HomeScreen> {
               await Navigator.pushNamed(context, "/add-expense")
                   as ExpenseModel;
           setState(() {
-            expenses.add(newExpense);
+            // expenses.add(newExpense);
+            expenseBox.add(newExpense);
           });
           // print("New Expense $newExpense");
         },

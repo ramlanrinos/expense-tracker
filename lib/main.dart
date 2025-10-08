@@ -9,6 +9,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final appDocDir = await getApplicationDocumentsDirectory();
   Hive.init(appDocDir.path);
+  Hive.registerAdapter(ExpenseModelAdapter());
   await Hive.openBox<ExpenseModel>("expenses");
   runApp(const ExpenseApp());
 }
