@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
       expenses.fold(0.0, (sum, item) => sum + item.amount);
   double get balance => totalBudget - totalExpense;
 
-  confirmDelete(int index) {
+  confirmDelete(index) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           ElevatedButton(
             onPressed: () async {
-              final expenseBox = Hive.box<ExpenseModel>("expenses");
+              // final expenseBox = Hive.box<ExpenseModel>("expenses");
               await expenseBox.deleteAt(index);
               Navigator.pop(context);
               setState(() {});
@@ -189,7 +189,7 @@ class ExpenseCard extends StatelessWidget {
             Container(
               padding: EdgeInsetsDirectional.only(start: 30),
               child: IconButton(
-                onPressed: () => onDelete,
+                onPressed: onDelete,
                 icon: Icon(Icons.delete, color: Colors.red),
               ),
             ),
